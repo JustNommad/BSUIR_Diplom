@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _water: 0
   _energy: 100
-  _speed: 3
+  _speed: 10
   _maxWater: 100
   _maxEnergy: 100

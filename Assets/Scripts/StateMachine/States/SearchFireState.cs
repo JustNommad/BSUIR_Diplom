@@ -21,7 +21,7 @@ public class SearchFireState : IRobotState
         var objectArray = SearchFireObjects();
         var closestObject = FindClosest(objectArray);
 
-        ChangeCurrentState(new PathfindingState(closestObject, new ExtinguishingFireState()));
+        ChangeCurrentState(new PathfindingState(closestObject, new ExtinguishingFireState(closestObject)));
     }
     public void TriggerEvent(GameObject objectTrigger)
     {
@@ -41,14 +41,15 @@ public class SearchFireState : IRobotState
         foreach (var gameObject in fireObjects)
         {
             var objectPostion = gameObject.transform.position;
-            var heading = objectPostion - robotPosition;
+            var distance = Vector3.Distance(objectPostion, robotPosition);
 
             if (!gameObject.activeSelf)
                 continue;
 
-            if (currentDistanse > heading.magnitude)
+            if (currentDistanse > distance)
             {
                 closestObject = gameObject;
+                currentDistanse = distance;
             }
         }
 

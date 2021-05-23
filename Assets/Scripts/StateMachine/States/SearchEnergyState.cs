@@ -43,11 +43,12 @@ public class SearchEnergyState : IRobotState
         foreach (var gameObject in energyObjects)
         {
             var objectPostion = gameObject.transform.position;
-            var heading = objectPostion - robotPosition;
+            var distance = Vector3.Distance(objectPostion, robotPosition);
 
-            if (currentDistanse > heading.magnitude)
+            if (currentDistanse > distance)
             {
                 closestObject = gameObject;
+                currentDistanse = distance;
             }
         }
 

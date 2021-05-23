@@ -41,11 +41,12 @@ public class SearchWaterState : IRobotState
         foreach (var gameObject in waterObjects)
         {
             var objectPostion = gameObject.transform.position;
-            var heading = objectPostion - robotPosition;
+            var distance = Vector3.Distance(objectPostion, robotPosition);
 
-            if(currentDistanse > heading.magnitude)
+            if (currentDistanse > distance)
             {
                 closestObject = gameObject;
+                currentDistanse = distance;
             }
         }
 

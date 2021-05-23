@@ -48,16 +48,19 @@ public class Grid : MonoBehaviour
             {
                 if (Physics.Raycast(worldPoint + new Vector3(_gridConfig.NodeRadius * i, 999, _gridConfig.NodeRadius * j), Vector3.down, out raycastHit, Mathf.Infinity))
                 {
-                    if(!wasYPosUpdate)
+                    if (!raycastHit.collider.gameObject.CompareTag("Ground") &&
+                        !raycastHit.collider.gameObject.CompareTag("Water") &&
+                        !raycastHit.collider.gameObject.CompareTag("Fire") &&
+                        !raycastHit.collider.gameObject.CompareTag("Energy"))
+                    {
+                        Wall = false;
+                    }
+
+                    if (!wasYPosUpdate)
                     {
                         var result = raycastHit.point;
                         worldPoint.y += result.y;
                         wasYPosUpdate = true;
-                    }
-
-                    if (!raycastHit.collider.gameObject.CompareTag("Ground"))
-                    {
-                        Wall = false;
                     }
                 }
             }

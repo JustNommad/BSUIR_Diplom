@@ -32,7 +32,7 @@ public class MovementState : IRobotState
 
         MoveRobot();
 
-        if (_robotTransform.position == _pathList[_pathList.Count].Position)
+        if (_robotTransform.position == _pathList[_pathList.Count - 1].Position)
         {
             ChangeCurrentState(_targetState);
         }
@@ -67,6 +67,20 @@ public class MovementState : IRobotState
 
     public void TriggerEvent(GameObject objectTrigger)
     {
-        ChangeCurrentState(_targetState);
+        if(objectTrigger.CompareTag("Energy") && _targetState is ChargingState)
+        {
+            ChangeCurrentState(_targetState);
+        }
+
+        if (objectTrigger.CompareTag("Water") && _targetState is GrabingWaterState)
+        {
+            ChangeCurrentState(_targetState);
+        }
+
+        if (objectTrigger.CompareTag("Fire") && _targetState is ExtinguishingFireState)
+        {
+            ChangeCurrentState(_targetState);
+        }
+
     }
 }

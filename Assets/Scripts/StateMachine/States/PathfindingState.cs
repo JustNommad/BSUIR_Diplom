@@ -5,15 +5,13 @@ using UnityEngine;
 
 public class PathfindingState : IRobotState
 {
-    private const int TimeMultiplier = 1000;
+    private const int TimeMultiplier = 3;
 
     private IStateMachine _stateMachine;
     private IRobotState _targetState;
     private GameObject _targetObject;
     private RobotResourses _robotResourses;
     private List<Node> _pathNodeList;
-    private long _searchTime;
-    private long _lastTime;
     public IStateMachine StateMachine => _stateMachine;
 
     public PathfindingState(GameObject targetObject, IRobotState targetState)
@@ -33,18 +31,13 @@ public class PathfindingState : IRobotState
         if (_stateMachine == null)
             return;
 
-        if (!IsEnoughEnergy() && _robotResourses.RobotMode > 0)
+        if (!IsEnoughEnergy() && _robotResourses.RobotMode == 0)
             ChangeStateToFindEnergy();
 
         if(_pathNodeList == null)
             _pathNodeList = FindPathToTarget();
 
         _robotResourses.Energy += ChangeEnergy();
-
-        var currentTimeInMilliseconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-
-        if (currentTimeInMilliseconds < _lastTime + (_searchTime * TimeMultiplier))
-            return;
 
         ChangeCurrentState(new MovementState(_pathNodeList, _targetState));
     }
@@ -63,10 +56,8 @@ public class PathfindingState : IRobotState
         var pathList = pathfindingObjectReferense.FindPath(robotObject.transform, _targetObject.transform);
 
         stopWatch.Stop();
-        _searchTime = stopWatch.ElapsedMilliseconds;
-        _lastTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
-        UnityEngine.Debug.Log($"StopWatch: {_searchTime}");
+        UnityEngine.Debug.Log($"StopWatch: {stopWatch.ElapsedMilliseconds}");
 
         return pathList;
     }

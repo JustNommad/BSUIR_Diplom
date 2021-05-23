@@ -5,6 +5,7 @@ public class ExtinguishingFireState : IRobotState
     private RobotResourses _robotResourses;
     private IStateMachine _stateMachine;
     private GameObject _targetObject;
+    private float _fireStatus = float.MaxValue;
     public IStateMachine StateMachine => _stateMachine;
 
     public ExtinguishingFireState(GameObject targetObject = null)
@@ -55,13 +56,16 @@ public class ExtinguishingFireState : IRobotState
         var mainParticle = fireParticleSystem.main;
         var particleSize = mainParticle.startSize.constant;
 
-        var extiguishingPerSecond = particleSize / 10;
+        if (_fireStatus == float.MaxValue)
+            _fireStatus = particleSize;
 
-        mainParticle.startSize = particleSize - extiguishingPerSecond;
+        var extiguishingPerSecond = particleSize / 5;
 
-        if(mainParticle.startSize.constant <= 0)
+        _fireStatus -= extiguishingPerSecond;
+
+        if(_fireStatus <= 0)
         {
-            fireParticleSystem.gameObject.SetActive(false);
+            _targetObject.SetActive(false);
 
             ChangeCurrentStateToFireSearching();
         }
@@ -69,7 +73,7 @@ public class ExtinguishingFireState : IRobotState
 
     private int ChangeRobotEnergy()
     {
-        return -3;
+        return -5;
     }
 
     private bool IsEnoughEnergy()
@@ -84,7 +88,7 @@ public class ExtinguishingFireState : IRobotState
 
     private int ChangeWaterStatus()
     {
-        return -5;
+        return -10;
     }
 
     private bool IsEnoughWater()

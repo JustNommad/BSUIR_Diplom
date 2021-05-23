@@ -26,7 +26,7 @@ public class GrabingWaterState : IRobotState
             return;
 
         GrabWater();
-        ChangeRobotEnergy();
+        _robotResourses.Energy += ChangeRobotEnergy();
 
         if(!IsEnoughEnergy())
         {

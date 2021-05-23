@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class StateMachine : MonoBehaviour, IStateMachine
 {
+    [SerializeField] private RobotConfig _robotConfig;
+    [SerializeField] private TMP_Text _waterStatus;
+    [SerializeField] private TMP_Text _energyStatus;
+
     private IRobotState _currentRobotState;
     private RobotResourses _robotResourses;
     private long _lastTime;
     public IRobotState CurrentRobotState => _currentRobotState;
-
-    [SerializeField] private RobotConfig _robotConfig;
 
     void Awake()
     {
@@ -33,10 +36,16 @@ public class StateMachine : MonoBehaviour, IStateMachine
     {
         var currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 
-        if (currentTime < _lastTime + 1)
-            return;
+        if (_currentRobotState as MovementState == null)
+        {
+            if (currentTime < _lastTime + 1)
+                return;
+        }
 
         CurrentRobotState.Process(_robotResourses);
+
+        _waterStatus.text = $"Water: {_robotResourses.Water}";
+        _energyStatus.text = $"Energy: {_robotResourses.Energy}";
 
         _lastTime = currentTime;
     }
